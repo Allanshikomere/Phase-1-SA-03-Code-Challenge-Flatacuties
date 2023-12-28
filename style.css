@@ -1,0 +1,43 @@
+
+h1, h2 {
+    color: white;
+}
+
+div.container {
+    max-width: 800px; 
+    margin-left: 0;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 30px;
+}
+.container {
+    background-color: #f4f4f4;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.buttons {
+    margin-top: 10px;
+}
+
+.buttons button {
+    margin-right: 5px;
+}
+
+
+.container img {
+    max-width: 100px;  
+    height: auto;
+    background-color: transparent;
+}
+
+body {
+    
+    background-color: grey; 
+    background-image: url('https://images.unsplash.com/photo-1703750960156-b8e765f5543c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxOHx8fGVufDB8fHx8fA%3D%3D'); /* Replace 'path_to_your_image.jpg' with your image path */
+    background-size: 100% 100%; 
+    background-repeat: no-repeat; 
+    background-position: center center; 
+}
