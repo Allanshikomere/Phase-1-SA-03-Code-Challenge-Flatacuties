@@ -8,7 +8,6 @@ fetch('db.json')
 function renderCharacters(characters) {
   const list = document.getElementById('charactersList');
   
-  
   characters.forEach(character => {
     const listItem = document.createElement('li');
     listItem.innerHTML = `
@@ -25,40 +24,67 @@ function renderCharacters(characters) {
     `;
     list.appendChild(listItem);
   
-    // Attach click event to display character details
     listItem.addEventListener('click', () => displayCharacterDetails(character));
   });
-  
 
-  // Add event listeners after appending elements
+  // Event listener for voting and resetting
   list.addEventListener('click', function(event) {
     if (event.target.classList.contains('vote-btn')) {
-      addVote(Number(event.target.dataset.id)); // Convert to number if necessary
+      voteForCharacter(Number(event.target.dataset.id)); 
     }
     if (event.target.classList.contains('reset-btn')) {
-      resetVotes(Number(event.target.dataset.id)); // Convert to number if necessary
+      resetVotes(Number(event.target.dataset.id)); 
     }
   });
-  listItem.addEventListener('click', () => displayAnimalDetails(character));
-
 }
 
 function displayCharacterDetails(character) {
-  const detailsContainer = document.getElementById('characterDetails');
-  
-  detailsContainer.innerHTML = '';
-  
-  const name = document.createElement('h2');
-  name.textContent = character.name;
-  
-  const image = document.createElement('img');
-  image.src = character.image;
-  image.alt = character.name;
-
-  const votes = document.createElement('p'); 
-  votes.textContent = `Votes: ${character.votes}`;
-
-  detailsContainer.appendChild(name);
-  detailsContainer.appendChild(image);
-  detailsContainer.appendChild(votes);
+  const characterDetails = document.getElementById("characterDetails");
+  characterDetails.innerHTML = `
+    <h2>${character.name}</h2>
+    <img src="${character.image}" alt="${character.name}">
+    <p>Votes: ${character.votes}</p>
+    <button onclick="voteForCharacter(${character.id})">Vote</button>
+  `;
 }
+
+function voteForCharacter(characterId) {
+  if (!characterId) {
+    console.log("Invalid CharacterId, Please try Again");
+    return;
+  }
+
+  fetch(` http://localhost:3000/characters/${characterId}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Error Occurred. Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Vote Response:', data);
+      const votesElement = document.querySelector('#characterDetails');
+      if (data && data.votes !== undefined) {
+        votesElement.textContent = `Votes: ${data.votes}`;
+      } else {
+        console.error('Invalid vote Response:', data);
+      }
+    })
+    .catch(error => console.error('Error voting for Character', error));
+}
+
+// function resetVotes(characterId) {
+//   const character = characters.find(char => char.id === characterId);
+  
+//   if (!character) {
+//     console.log(`Character with ID ${characterId} not found.`);
+//     return; // Exit the function early if character is not found
+//   }
+
+//   character.votes = 0;
+
+//   const votesElement = document.querySelector('#characterDetails p');
+//   if (votesElement) {
+//     votesElement.textContent = `Votes: ${character.votes}`;
+//   }
+// }
