@@ -1,90 +1,69 @@
-// Fetch the JSON data
-fetch('db.json')
-  .then(response => response.json())
-  .then(data => renderCharacters(data.characters))
-  .catch(error => console.error('Error fetching data:', error));
+const voteCounts = {};
+//Wait for DOM to be fuly loaded before executing the code
+document.addEventListener('DOMContentLoaded', () => {
+  //Fetch characters from the server
+  fetch('http://localhost:3000/characters')
+      .then(response => response.json())
+      .then(data => {
+          //Log the data received from the server
+          console.log(data); 
+          //Get the element where list will be displayed
+          let animalsList = document.getElementById('animals');
+          //Iterates over each character
+          data.forEach(character => {
+            // Initialize vote count for each character
+            voteCounts[character.id] = character.votes;
+              // Create a new list item for each character
+              let listItem = document.createElement('li');
+              listItem.textContent = character.name;
+              //Adds a click event to show details when clicked
+              listItem.addEventListener('click', () => {showAnimalDetails(character.id)
+                  alert("you picked an animal")} );
+              //Append the listItem to the animalsList
+              animalsList.appendChild(listItem);
+          });
+      })
+      
+      .catch(error => console.error('Error fetching animal list:', error));
+});
 
-// Renders the characters to the DOM
-function renderCharacters(characters) {
-  const list = document.getElementById('charactersList');
-  
-  characters.forEach(character => {
-    const listItem = document.createElement('li');
-    listItem.innerHTML = `
-      <div class="container">
-        <img src="${character.image}" alt="${character.name}">
-        <span>${character.name}</span>
-      </div>
-      <div class="buttons">
-        <button class="vote-btn" data-id="${character.id}">Vote</button>
-        <button class="reset-btn" data-id="${character.id}">Reset</button>
-      </div>
-      <div></div>
-      <div></div>
-    `;
-    list.appendChild(listItem);
-  
-    listItem.addEventListener('click', () => displayCharacterDetails(character));
-  });
+// Move the rest of your functions outside of the DOMContentLoaded event listener
+function showAnimalDetails(characterId) {
 
-  // Event listener for voting and resetting
-  list.addEventListener('click', function(event) {
-    if (event.target.classList.contains('vote-btn')) {
-      voteForCharacter(Number(event.target.dataset.id)); 
+  // Make a GET request to retrieve the details of a specific character
+  fetch(`http://localhost:3000/characters/${characterId}`)
+      .then(response => response.json())
+      .then(animal => {
+
+          // Display the details of the selected animal
+          const animalDetails = document.getElementById('animal-details');
+          animalDetails.innerHTML = `
+              <h2>${animal.name}</h2>
+              <img src="${animal.image}" alt="${animal.name}">
+              <p>Votes: <span id="votesCount">${animal.votes}</span></p>
+              <button onclick="voteForAnimal(${animal.id})">Vote</button>
+          `;
+      })
+      .catch(error => console.log('Error fetching animal details:', error));
+}
+
+// Define voteForAnimal outside of the DOMContentLoaded event listener
+function voteForAnimal(characterId) {
+
+  // Make a POST request to vote for the specified animal
+  fetch(`http://localhost:3000/characters/${characterId}/vote`, { method: 'POST' })
+      .then(response => response.json())
+      .then(data => {
+        // Update the vote count in the local variable
+        voteCounts[characterId] = parseInt(voteCounts[characterId]) + 1;
+
+        // Update the displayed votes after a successful vote
+        const votesElement = document.getElementById('votesCount');
+        votesElement.textContent = voteCounts[characterId];
+
+        
+          alert("Vote Added Succesfully")
+          console.log(data);
+      })
+      .catch(error => console.error('Error voting for animal:', error));
     }
-    if (event.target.classList.contains('reset-btn')) {
-      resetVotes(Number(event.target.dataset.id)); 
-    }
-  });
-}
-
-function displayCharacterDetails(character) {
-  const characterDetails = document.getElementById("characterDetails");
-  characterDetails.innerHTML = `
-    <h2>${character.name}</h2>
-    <img src="${character.image}" alt="${character.name}">
-    <p>Votes: ${character.votes}</p>
-    <button onclick="voteForCharacter(${character.id})">Vote</button>
-  `;
-}
-
-function voteForCharacter(characterId) {
-  if (!characterId) {
-    console.log("Invalid CharacterId, Please try Again");
-    return;
-  }
-
-  fetch(` http://localhost:3000/characters/${characterId}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Error Occurred. Status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Vote Response:', data);
-      const votesElement = document.querySelector('#characterDetails');
-      if (data && data.votes !== undefined) {
-        votesElement.textContent = `Votes: ${data.votes}`;
-      } else {
-        console.error('Invalid vote Response:', data);
-      }
-    })
-    .catch(error => console.error('Error voting for Character', error));
-}
-
-// function resetVotes(characterId) {
-//   const character = characters.find(char => char.id === characterId);
-  
-//   if (!character) {
-//     console.log(`Character with ID ${characterId} not found.`);
-//     return; // Exit the function early if character is not found
-//   }
-
-//   character.votes = 0;
-
-//   const votesElement = document.querySelector('#characterDetails p');
-//   if (votesElement) {
-//     votesElement.textContent = `Votes: ${character.votes}`;
-//   }
-// }

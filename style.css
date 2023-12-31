@@ -1,43 +1,91 @@
+/* Basic reset for the list */
+body, ul {
+    margin: 0;
+    padding: 0;
+    background-color: #333;
+    background-image: url('https://images.pexels.com/photos/22794/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=600'); 
+}
 
-h1, h2 {
+/* Style for the main header */
+h1,h2 {
+    text-align: center;
+    margin-top: 20px;
     color: white;
 }
 
-div.container {
-    max-width: 800px; 
-    margin-left: 0;
-    margin-right: auto;
-    padding-left: 0;
-    padding-right: 30px;
+/* Style for the list of animals */
+#animals {
+    list-style-type: none;
+    padding: 0;
+    margin: 20px auto;
+    max-width: 600px;
 }
-.container {
-    background-color: #f4f4f4;
+
+#animals li {
+    background-color: #f7f7f7;
     padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
+    margin: 5px 0;
     border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-.buttons {
-    margin-top: 10px;
+#animals li:hover {
+    background-color: #1da6ea;
 }
 
-.buttons button {
-    margin-right: 5px;
-}
-
-
-.container img {
-    max-width: 100px;  
-    height: auto;
-    background-color: transparent;
-}
-
-body {
+/* Style for the animal details */
+#animal-details {
+    margin: 30px auto;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: typing 3.5s steps(30, end), blink-caret .75s step-end infinite;
     
-    background-color: grey; 
-    background-image: url('https://images.unsplash.com/photo-1703750960156-b8e765f5543c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxOHx8fGVufDB8fHx8fA%3D%3D'); /* Replace 'path_to_your_image.jpg' with your image path */
-    background-size: 100% 100%; 
-    background-repeat: no-repeat; 
-    background-position: center center; 
 }
+
+#animal-details h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#animal-details img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#animal-details p {
+    text-align: center;
+    margin-top: 15px;
+    color: #666;
+}
+
+#animal-details button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#animal-details button:hover {
+    background-color: #0056b3;
+}
+
+.typewriter h1 {
+    overflow: hidden;
+    border-right: .15em solid orange; /* Adjust this for the cursor */
+    white-space: nowrap;
+    margin: 0 auto; /* Center the text */
+    letter-spacing: .15em; /* Adjust spacing between characters */
+    animation: typing 3.5s steps(30, end), blink-caret .75s step-end infinite;
+  }
