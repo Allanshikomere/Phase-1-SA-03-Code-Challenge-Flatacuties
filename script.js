@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching character list:', error));
 });
+
 function showAnimalDetails(characterId) {
   fetch(`http://localhost:3000/characters/${characterId}`)
       .then(response => response.json())
@@ -32,21 +33,29 @@ function showAnimalDetails(characterId) {
                   <img src="${character.image}" alt="${character.name}">
                   <p>Votes: <span id="votesCount">${character.votes}</span></p>
                   <form id="voteForm">
+                      <input type="hidden" id="characterIdInput" value="${character.id}">
                       <label for="voteInput">Enter Votes:</label>
                       <input type="number" id="voteInput" name="votes" min="1" required>
                       <input type="submit" value="Vote">
                   </form>
                   <button onclick="resetVotes(${character.id})" class="green-button">Reset Votes</button>
                   <button onclick="deleteAnimal(${character.id})" class="red-button">Delete Animal</button>
-
+                  <p>Current Votes: <span id="currentVotesCount">${voteCounts[character.id]}</span></p>
               </div>
           `;
       })
       .catch(error => console.log('Error fetching character details:', error));
 }
 
+// // Function to handle voting for a character
+// document.getElementById('voteForm').addEventListener('submit', function(event) {
+//     event.preventDefault();
+//     const characterId = document.getElementById('characterIdInput').value;
+//     const votes = document.getElementById('voteInput').value;
+//     voteForCharacter(characterId, votes);
+// });
+
 function voteForCharacter(characterId, votes) {
-    
     fetch(`http://localhost:3000/characters/${characterId}/vote`, {
         method: 'PATCH',
         headers: {
@@ -55,18 +64,17 @@ function voteForCharacter(characterId, votes) {
         body: JSON.stringify({ votes: parseInt(votes) })
     })
     .then(response => {
-        console.log("Server Response:", response);
-        
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         return response.json();
     })
     .then(data => {
-        console.log("Vote response:", data);
         voteCounts[characterId] = parseInt(votes);
         const votesElement = document.getElementById('votesCount');
         votesElement.textContent = voteCounts[characterId];
+        const currentVotesElement = document.getElementById('currentVotesCount');
+        currentVotesElement.textContent = voteCounts[characterId];
         alert("Vote Added Successfully");
     })
     .catch(error => {
@@ -75,32 +83,34 @@ function voteForCharacter(characterId, votes) {
     });
 }
 
-
 // Function to reset votes for a character
 function resetVotes(characterId) {
-  fetch(`http://localhost:3000/characters/${characterId}/reset-votes`, {
-      method: 'PATCH',
-      headers: {
-          'Content-Type': 'application/json'
-      }
-  })
-  .then(response => response.json())
-  .then(data => {
-      const votesElement = document.getElementById('votesCount');
-      votesElement.textContent = data.votes;
-      alert("Votes Reset Successfully");
-  })
-  .catch(error => console.error('Error resetting votes:', error));
+    fetch(`http://localhost:3000/characters/${characterId}/reset-votes`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        voteCounts[characterId] = data.votes;
+        const votesElement = document.getElementById('votesCount');
+        votesElement.textContent = voteCounts[characterId];
+        const currentVotesElement = document.getElementById('currentVotesCount');
+        currentVotesElement.textContent = voteCounts[characterId];
+        alert("Votes Reset Successfully");
+    })
+    .catch(error => console.error('Error resetting votes:', error));
 }
 
-
+// Function to delete a character
 function deleteAnimal(characterId) {
-  fetch(`http://localhost:3000/characters/${characterId}`, {
-      method: 'DELETE'
-  })
-  .then(response => response.json())
-  .then(data => {
-      alert("Animal Deleted Successfully");
-  })
-  .catch(error => console.error('Error deleting animal:', error));
+    fetch(`http://localhost:3000/characters/${characterId}`, {
+        method: 'DELETE'
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert("Animal Deleted Successfully");
+    })
+    .catch(error => console.error('Error deleting animal:', error));
 }
