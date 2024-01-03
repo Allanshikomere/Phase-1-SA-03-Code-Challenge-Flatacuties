@@ -24,7 +24,7 @@ function showAnimalDetails(characterId) {
   fetch(`http://localhost:3000/characters/${characterId}`)
       .then(response => response.json())
       .then(character => {
-          console.log("Selected character:", character);
+          console.log("Selected character:", character); 
           const characterDetails = document.getElementById('character-details');
           characterDetails.innerHTML = `
               <div class="character-container">
@@ -46,6 +46,7 @@ function showAnimalDetails(characterId) {
 }
 
 function voteForCharacter(characterId, votes) {
+    
     fetch(`http://localhost:3000/characters/${characterId}/vote`, {
         method: 'PATCH',
         headers: {
