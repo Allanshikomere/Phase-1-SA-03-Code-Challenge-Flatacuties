@@ -46,9 +46,9 @@ function showAnimalDetails(characterId) {
 }
 
 function voteForCharacter(characterId, votes) {
-    // Debugging logs
-    console.log("Voting for character with ID:", characterId);
-    console.log("Endpoint URL:", `http://localhost:3000/characters/${characterId}/vote`);
+    
+    // console.log("Voting for character with ID:", characterId);
+    // console.log("Endpoint URL:", `http://localhost:3000/characters/${characterId}/vote`);
     
     fetch(`http://localhost:3000/characters/${characterId}/vote`, {
         method: 'PATCH',
@@ -58,7 +58,6 @@ function voteForCharacter(characterId, votes) {
         body: JSON.stringify({ votes: parseInt(votes) })
     })
     .then(response => {
-        // Log the server response
         console.log("Server Response:", response);
         
         if (!response.ok) {
@@ -82,7 +81,6 @@ function voteForCharacter(characterId, votes) {
 
 // Function to reset votes for a character
 function resetVotes(characterId) {
-  // Make a PATCH request to reset votes
   fetch(`http://localhost:3000/characters/${characterId}/reset-votes`, {
       method: 'PATCH',
       headers: {
@@ -91,7 +89,6 @@ function resetVotes(characterId) {
   })
   .then(response => response.json())
   .then(data => {
-      // Update the displayed votes
       const votesElement = document.getElementById('votesCount');
       votesElement.textContent = data.votes;
       alert("Votes Reset Successfully");
@@ -101,15 +98,12 @@ function resetVotes(characterId) {
 
 
 function deleteAnimal(characterId) {
-  // Make a DELETE request to delete the character
   fetch(`http://localhost:3000/characters/${characterId}`, {
       method: 'DELETE'
   })
   .then(response => response.json())
   .then(data => {
-      // Handle successful deletion (e.g., remove the character from the list, display a message)
       alert("Animal Deleted Successfully");
-      // Optionally, redirect to another page or reload the list of characters
   })
   .catch(error => console.error('Error deleting animal:', error));
 }
