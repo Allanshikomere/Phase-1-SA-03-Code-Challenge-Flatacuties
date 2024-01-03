@@ -1,12 +1,6 @@
 {
   "characters": [
     {
-      "id": 1,
-      "name": "Mr. Cute",
-      "image": "https://images.unsplash.com/photo-1574521248075-46aea9056857?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGN1dGUlMjBjYXRzfGVufDB8fDB8fHww",
-      "votes": 0
-    },
-    {
       "id": 2,
       "name": "Mx. Monkey",
       "image": "https://images.unsplash.com/photo-1577754883406-d8f06988db85?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGN1dGUlMjBtb25rZXl8ZW58MHx8MHx8fDA%3D",
@@ -31,5 +25,4 @@
       "votes": 0
     }
   ]
- }
- 
+}

@@ -20,14 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error fetching character list:', error));
 });
-
 function showAnimalDetails(characterId) {
-    fetch(`http://localhost:3000/characters/${characterId}`)
-        .then(response => response.json())
-        .then(character => {
-            console.log("Selected character:", character); // Debugging log
-            const characterDetails = document.getElementById('character-details');
-            characterDetails.innerHTML = `
+  fetch(`http://localhost:3000/characters/${characterId}`)
+      .then(response => response.json())
+      .then(character => {
+          console.log("Selected character:", character); // Debugging log
+          const characterDetails = document.getElementById('character-details');
+          characterDetails.innerHTML = `
               <div class="character-container">
                   <h2>${character.name}</h2>
                   <img src="${character.image}" alt="${character.name}">
@@ -37,17 +36,13 @@ function showAnimalDetails(characterId) {
                       <input type="number" id="voteInput" name="votes" min="1" required>
                       <input type="submit" value="Vote">
                   </form>
+                  <button onclick="resetVotes(${character.id})" class="green-button">Reset Votes</button>
+                  <button onclick="deleteAnimal(${character.id})" class="red-button">Delete Animal</button>
+
               </div>
           `;
-
-            const voteForm = document.getElementById('voteForm');
-            voteForm.addEventListener('submit', function(event) {
-                event.preventDefault();
-                const votes = document.getElementById('voteInput').value;
-                voteForCharacter(character.id, votes);
-            });
-        })
-        .catch(error => console.log('Error fetching character details:', error));
+      })
+      .catch(error => console.log('Error fetching character details:', error));
 }
 
 function voteForCharacter(characterId, votes) {
@@ -82,4 +77,39 @@ function voteForCharacter(characterId, votes) {
         console.error('Error voting for character:', error.message);
         alert("Error voting for character. Please try again.");
     });
+}
+
+
+// Function to reset votes for a character
+function resetVotes(characterId) {
+  // Make a PATCH request to reset votes
+  fetch(`http://localhost:3000/characters/${characterId}/reset-votes`, {
+      method: 'PATCH',
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
+  .then(response => response.json())
+  .then(data => {
+      // Update the displayed votes
+      const votesElement = document.getElementById('votesCount');
+      votesElement.textContent = data.votes;
+      alert("Votes Reset Successfully");
+  })
+  .catch(error => console.error('Error resetting votes:', error));
+}
+
+
+function deleteAnimal(characterId) {
+  // Make a DELETE request to delete the character
+  fetch(`http://localhost:3000/characters/${characterId}`, {
+      method: 'DELETE'
+  })
+  .then(response => response.json())
+  .then(data => {
+      // Handle successful deletion (e.g., remove the character from the list, display a message)
+      alert("Animal Deleted Successfully");
+      // Optionally, redirect to another page or reload the list of characters
+  })
+  .catch(error => console.error('Error deleting animal:', error));
 }

@@ -122,3 +122,25 @@ h1,h2 {
     display: block; /* Display the image as a block element */
     margin-bottom: 16px; /* Add bottom margin */
 }
+.red-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.red-button:hover {
+    background-color: darkred;
+}
+.green-button {
+    background-color: green;
+    color: greenyellow;
+
+}
+
+.green-button:hover {
+    background-color: aqua;
+}
