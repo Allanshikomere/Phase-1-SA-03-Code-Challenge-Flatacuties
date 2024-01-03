@@ -51,7 +51,7 @@ function showAnimalDetails(characterId) {
 function voteForAnimal(characterId) {
 
   // Make a POST request to vote for the specified animal
-  fetch(`http://localhost:3000/characters/${characterId}/vote`, { method: 'POST' })
+  fetch(`http://localhost:3000/characters/${characterId}/vote`)
       .then(response => response.json())
       .then(data => {
         // Update the vote count in the local variable
