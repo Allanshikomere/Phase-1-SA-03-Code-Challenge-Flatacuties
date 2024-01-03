@@ -1,69 +1,85 @@
 const voteCounts = {};
-//Wait for DOM to be fuly loaded before executing the code
+
 document.addEventListener('DOMContentLoaded', () => {
-  //Fetch characters from the server
-  fetch('http://localhost:3000/characters')
-      .then(response => response.json())
-      .then(data => {
-          //Log the data received from the server
-          console.log(data); 
-          //Get the element where list will be displayed
-          let animalsList = document.getElementById('animals');
-          //Iterates over each character
-          data.forEach(character => {
-            // Initialize vote count for each character
-            voteCounts[character.id] = character.votes;
-              // Create a new list item for each character
-              let listItem = document.createElement('li');
-              listItem.textContent = character.name;
-              //Adds a click event to show details when clicked
-              listItem.addEventListener('click', () => {showAnimalDetails(character.id)
-                  alert("you picked an animal")} );
-              //Append the listItem to the animalsList
-              animalsList.appendChild(listItem);
-          });
-      })
-      
-      .catch(error => console.error('Error fetching animal list:', error));
+    // Fetch characters from the server
+    fetch('http://localhost:3000/characters')
+        .then(response => response.json())
+        .then(data => {
+            console.log("Characters data:", data); // Debugging log
+            let animalsList = document.getElementById('animals');
+            data.forEach(character => {
+                voteCounts[character.id] = character.votes;
+                let listItem = document.createElement('li');
+                listItem.textContent = character.name;
+                listItem.addEventListener('click', () => { 
+                    showAnimalDetails(character.id); 
+                    alert("you picked a character"); 
+                });
+                animalsList.appendChild(listItem);
+            });
+        })
+        .catch(error => console.error('Error fetching character list:', error));
 });
 
-// Move the rest of your functions outside of the DOMContentLoaded event listener
 function showAnimalDetails(characterId) {
-
-  // Make a GET request to retrieve the details of a specific character
-  fetch(`http://localhost:3000/characters/${characterId}`)
-      .then(response => response.json())
-      .then(animal => {
-
-          // Display the details of the selected animal
-          const animalDetails = document.getElementById('animal-details');
-          animalDetails.innerHTML = `
-              <h2>${animal.name}</h2>
-              <img src="${animal.image}" alt="${animal.name}">
-              <p>Votes: <span id="votesCount">${animal.votes}</span></p>
-              <button onclick="voteForAnimal(${animal.id})">Vote</button>
+    fetch(`http://localhost:3000/characters/${characterId}`)
+        .then(response => response.json())
+        .then(character => {
+            console.log("Selected character:", character); // Debugging log
+            const characterDetails = document.getElementById('character-details');
+            characterDetails.innerHTML = `
+              <div class="character-container">
+                  <h2>${character.name}</h2>
+                  <img src="${character.image}" alt="${character.name}">
+                  <p>Votes: <span id="votesCount">${character.votes}</span></p>
+                  <form id="voteForm">
+                      <label for="voteInput">Enter Votes:</label>
+                      <input type="number" id="voteInput" name="votes" min="1" required>
+                      <input type="submit" value="Vote">
+                  </form>
+              </div>
           `;
-      })
-      .catch(error => console.log('Error fetching animal details:', error));
+
+            const voteForm = document.getElementById('voteForm');
+            voteForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                const votes = document.getElementById('voteInput').value;
+                voteForCharacter(character.id, votes);
+            });
+        })
+        .catch(error => console.log('Error fetching character details:', error));
 }
 
-// Define voteForAnimal outside of the DOMContentLoaded event listener
-function voteForAnimal(characterId) {
-
-  // Make a POST request to vote for the specified animal
-  fetch(`http://localhost:3000/characters/${characterId}/vote`)
-      .then(response => response.json())
-      .then(data => {
-        // Update the vote count in the local variable
-        voteCounts[characterId] = parseInt(voteCounts[characterId]) + 1;
-
-        // Update the displayed votes after a successful vote
+function voteForCharacter(characterId, votes) {
+    // Debugging logs
+    console.log("Voting for character with ID:", characterId);
+    console.log("Endpoint URL:", `http://localhost:3000/characters/${characterId}/vote`);
+    
+    fetch(`http://localhost:3000/characters/${characterId}/vote`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ votes: parseInt(votes) })
+    })
+    .then(response => {
+        // Log the server response
+        console.log("Server Response:", response);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log("Vote response:", data);
+        voteCounts[characterId] = parseInt(votes);
         const votesElement = document.getElementById('votesCount');
         votesElement.textContent = voteCounts[characterId];
-
-        
-          alert("Vote Added Succesfully")
-          console.log(data);
-      })
-      .catch(error => console.error('Error voting for animal:', error));
-    }
+        alert("Vote Added Successfully");
+    })
+    .catch(error => {
+        console.error('Error voting for character:', error.message);
+        alert("Error voting for character. Please try again.");
+    });
+}

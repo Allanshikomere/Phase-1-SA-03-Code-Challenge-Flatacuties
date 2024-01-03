@@ -89,3 +89,36 @@ h1,h2 {
     letter-spacing: .15em; /* Adjust spacing between characters */
     animation: typing 3.5s steps(30, end), blink-caret .75s step-end infinite;
   }
+
+
+
+  .character-container {
+    max-width: 600px; /* Set maximum width */
+    margin: auto; /* Center the container horizontally */
+    padding: 20px; /* Add padding */
+    background-color: #f9f9f9; /* Set background color */
+    border: 1px solid #ddd; /* Add border */
+    border-radius: 8px; /* Add rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+}
+
+.character-container h2 {
+    margin-top: 0; /* Remove top margin for the heading */
+}
+
+.character-container img {
+    max-width: 100%; /* Set maximum width for the image */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Display the image as a block element */
+    margin-bottom: 16px; /* Add bottom margin */
+}
+
+.character-container p {
+    margin-bottom: 16px; /* Add bottom margin */
+}
+.character-container img {
+    width: 200px; /* Set the width of the image */
+    height: auto; /* Maintain the aspect ratio */
+    display: block; /* Display the image as a block element */
+    margin-bottom: 16px; /* Add bottom margin */
+}
