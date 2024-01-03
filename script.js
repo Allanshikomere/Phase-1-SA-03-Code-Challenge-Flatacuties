@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch('http://localhost:3000/characters')
         .then(response => response.json())
         .then(data => {
-            console.log("Characters data:", data); // Debugging log
+            console.log("Characters data:", data); 
             let animalsList = document.getElementById('animals');
             data.forEach(character => {
                 voteCounts[character.id] = character.votes;
@@ -24,7 +24,7 @@ function showAnimalDetails(characterId) {
   fetch(`http://localhost:3000/characters/${characterId}`)
       .then(response => response.json())
       .then(character => {
-          console.log("Selected character:", character); // Debugging log
+          console.log("Selected character:", character);
           const characterDetails = document.getElementById('character-details');
           characterDetails.innerHTML = `
               <div class="character-container">
@@ -46,10 +46,6 @@ function showAnimalDetails(characterId) {
 }
 
 function voteForCharacter(characterId, votes) {
-    
-    // console.log("Voting for character with ID:", characterId);
-    // console.log("Endpoint URL:", `http://localhost:3000/characters/${characterId}/vote`);
-    
     fetch(`http://localhost:3000/characters/${characterId}/vote`, {
         method: 'PATCH',
         headers: {
